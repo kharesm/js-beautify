@@ -51,14 +51,14 @@ function Tokenizer(input_string, opts) {
     var digit_oct = /[01234567]/;
     var digit_hex = /[0123456789abcdefABCDEF]/;
 
-    this.positionable_operators = '!= !== % & && * ** + - / : < << <= == === > >= >> >>> ? ^ | ||'.split(' ');
+    this.positionable_operators = '!= or and + - / < <= = > >= ^ | ||'.split(' ');
     var punct = this.positionable_operators.concat(
         // non-positionable operators - these do not follow operator position settings
-        '! %= &= *= **= ++ += , -- -= /= :: <<= = => >>= >>>= ^= |= ~ ...'.split(' '));
+        '! %= &= *= **= ++ += , -- -= /= :: <<= = =>'.split(' '));
 
     // words which should always start on new line.
-    this.line_starters = 'continue,try,throw,return,var,let,const,if,switch,case,default,for,while,break,function,import,export'.split(',');
-    var reserved_words = this.line_starters.concat(['do', 'in', 'of', 'else', 'get', 'set', 'new', 'catch', 'finally', 'typeof', 'yield', 'async', 'await', 'from', 'as']);
+    this.line_starters = 'call,break,subroutine,end,return,declare,if,endif,case,endcase,of,for,endfor,while,endwhile,free,record'.split(',');
+    var reserved_words = this.line_starters.concat(['else']);
 
     //  /* ... */ comment ends with nearest */ or end of file
     var block_comment_pattern = /([\s\S]*?)((?:\*\/)|$)/g;
@@ -295,10 +295,10 @@ function Tokenizer(input_string, opts) {
                 return [comment, 'TK_BLOCK_COMMENT', directives];
             }
             // peek for comment // ...
-            if (input.peek() === '/') {
+            if (input.peek() === ';') {
                 input.next();
                 comment_match = input.match(comment_pattern);
-                comment = '//' + comment_match[0];
+                comment = ';' + comment_match[0];
                 return [comment, 'TK_COMMENT'];
             }
 
